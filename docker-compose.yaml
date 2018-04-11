@@ -1,9 +1,9 @@
 version: '2'
 services:
   WeatherService:
-    build: ./WatherService
-    image: tautvis/WatherService
-    working_dir: /WatherService
+    build: ./WeatherService
+    image: tautvis/weatherService
+    working_dir: /WeatherService
     volumes:
       - ./WatherService:/WatherService
       - ~/.m2:/root/.m2
