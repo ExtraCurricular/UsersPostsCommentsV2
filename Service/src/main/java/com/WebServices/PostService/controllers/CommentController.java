@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.WebServices.PostService.Exception404;
 import com.WebServices.PostService.models.Comment;
 import com.WebServices.PostService.repositories.CommentRepository;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -32,8 +33,10 @@ public class CommentController {
     PostRepository postRepository;
 
     @GetMapping("/comments")
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
+    public String getAllComments() {
+        final String uri = "http://localhost:5000/locations";
+
+        return new RestTemplate().getForObject(uri, String.class);
     }
 
     @GetMapping("/comments/{id}")
