@@ -9,7 +9,7 @@ services:
       - ~/.m2:/root/.m2
     ports:
       - "5000:5000"
-    command: mvn clean package
+    command: mvn clean package && "java", "-jar", "target/oru-servisas-jar-with-dependencies.jar"
 
   app:
     build: ./Service
