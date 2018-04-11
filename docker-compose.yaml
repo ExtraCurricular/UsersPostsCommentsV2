@@ -2,7 +2,7 @@ version: '2'
 services:
   WeatherService:
     build: ./WeatherService
-    image: tautvis/weatherService
+    image: tautvis/weatherservice
     working_dir: /WeatherService
     volumes:
       - ./WatherService:/WatherService
