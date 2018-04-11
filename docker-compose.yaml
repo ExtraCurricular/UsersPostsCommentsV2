@@ -5,7 +5,7 @@ services:
     image: tautvis/weatherservice
     working_dir: /WeatherService
     volumes:
-      - ./WatherService:/WatherService
+      - ./WeatherService:/WeatherService
       - ~/.m2:/root/.m2
     ports:
       - "5000:5000"
