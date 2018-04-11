@@ -1,5 +1,15 @@
 version: '2'
 services:
+  WeatherService:
+    build: ./WatherService
+    image: tautvis/WatherService
+    working_dir: /WatherService
+    volumes:
+      - ./WatherService:/WatherService
+      - ~/.m2:/root/.m2
+    ports:
+      - "5000:5000"
+
   app:
     build: ./Service
     image: tautvis/service
