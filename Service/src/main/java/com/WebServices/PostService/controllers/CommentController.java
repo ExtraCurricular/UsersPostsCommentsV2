@@ -34,7 +34,7 @@ public class CommentController {
 
     @GetMapping("/comments")
     public String getAllComments() {
-        final String uri = "http://193.219.91.103:2740/locations";
+        final String uri = "193.219.91.103:2740/locations";
 
         return new RestTemplate().getForObject(uri, String.class);
     }
