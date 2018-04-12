@@ -127,8 +127,8 @@ public class PostController {
                                 .orElse(null);
                         if (forecast == null) {
                             Random rand = new Random();
-                            WeatherForecastDTO forecastDTO = new WeatherForecastDTO(post.getLocation(), post.getDate(), (float) rand.nextInt(30) - 20);
-                            HttpEntity<WeatherForecastDTO> request = new HttpEntity<>(forecastDTO);
+                            PostWeatherDTO postWeatherDTO = new PostWeatherDTO(post.getLocation(), post.getDate(), (float) rand.nextInt(30) - 20);
+                            HttpEntity<PostWeatherDTO> request = new HttpEntity<>(postWeatherDTO);
                             restTemplate.exchange("http://172.17.0.1:5000/locations", HttpMethod.POST, request, String.class);
                         }
                     }

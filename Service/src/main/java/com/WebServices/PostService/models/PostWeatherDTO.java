@@ -2,18 +2,16 @@ package com.WebServices.PostService.models;
 
 import java.util.Date;
 
-public class WeatherForecastDTO {
-    private int id;
+public class PostWeatherDTO {
+
     private Float temperature;
     private String city;
     private Date date;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public PostWeatherDTO(String city, Date date, Float temperature) {
+        this.city = city;
+        this.date = date;
+        this.temperature = temperature;
     }
 
     public Float getTemperature() {
