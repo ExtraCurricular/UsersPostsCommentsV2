@@ -1,8 +1,6 @@
 package com.WebServices.PostService.controllers;
 
-import com.WebServices.PostService.Exception400;
-import com.WebServices.PostService.Exception406;
-import com.WebServices.PostService.Exception409;
+import com.WebServices.PostService.*;
 import com.WebServices.PostService.models.*;
 import com.WebServices.PostService.repositories.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import com.WebServices.PostService.Exception404;
 import com.WebServices.PostService.repositories.PostRepository;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,7 +41,7 @@ public class PostController {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
-                restTemplate.exchange("http://172.17.0.1:5000/locations",
+                restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
                         });
 
@@ -78,7 +75,7 @@ public class PostController {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
-                restTemplate.exchange("http://172.17.0.1:5000/locations",
+                restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
                         });
 
@@ -109,17 +106,14 @@ public class PostController {
             if (post.getTitle() == null || post.getBody() == null || post.getUserId() == 0) {
                 throw new Exception406();
             }
-            System.out.println("111111111111111111111111111111111111111111111111111111111111111111111");
             post.setDate(new Date());
 
             if (post.getLocation() != null) {
-                System.out.println("2222222222222222222222222222222222222222222222222222222222222222222");
                 RestTemplate restTemplate = new RestTemplate();
                 ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
-                        restTemplate.exchange("http://172.17.0.1:5000/locations",
+                        restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
                                 HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
                                 });
-                System.out.println("33333333333333333333333333333333333333333333333333333333333333333333");
                 if (forecastResponse.getStatusCode() == HttpStatus.OK) {
                     List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
                     if (post.getLocation() != null) {
@@ -127,7 +121,6 @@ public class PostController {
                                 x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate())))
                                 .findFirst()
                                 .orElse(null);
-                        System.out.println("44444444444444444444444444444444444444444444444444444444444444");
                         if (forecast == null) {
                             Random rand = new Random();
                             HttpHeaders headers = new HttpHeaders();
@@ -141,18 +134,20 @@ public class PostController {
                             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                             String json = ow.writeValueAsString(postWeatherDTO);
                             HttpEntity<String> request = new HttpEntity<>(json);
-                            restTemplate.postForEntity("http://172.17.0.1:5000/locations", request, String.class);
+                            ResponseEntity<String> postResponse = restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
+                                    HttpMethod.POST, request, String.class);
+                            if (postResponse.getStatusCode() != HttpStatus.CREATED){
+                                throw new Exception503("(POST) api/posts", "the weather forecast service responded with an error code");
+                            }
                         }
                     }
                 }
             }
 
             userRepository.findById(post.getUserId()).orElseThrow(() -> new Exception409());
-            System.out.println("7777777777777777777777777777777777777777777777777777777777");
 
             response.setStatus(201);
             Post postNew = postRepository.save(post);
-            System.out.println("888888888888888888888888888888888888888888888888888");
             response.addHeader("Location", "api/posts/" + postNew.getId());
             return postNew;
         } catch (Exception400 ex) {

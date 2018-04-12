@@ -2,7 +2,7 @@ package com.WebServices.PostService.models;
 
 import java.util.Date;
 
-public class PostDTO implements IPost{
+public class PostDTO {
     private long id;
     private String title;
     private String body;
