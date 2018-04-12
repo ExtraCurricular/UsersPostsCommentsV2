@@ -130,8 +130,11 @@ public class PostController {
                         if (forecast == null) {
                             System.out.println("55555555555555555555555555555555555555555555555555555555555");
                             Random rand = new Random();
+                            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                             PostWeatherDTO postWeatherDTO = new PostWeatherDTO(post.getLocation(), post.getDate(), (float) rand.nextInt(30) - 20);
+                            System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
                             HttpEntity<PostWeatherDTO> request = new HttpEntity<>(postWeatherDTO);
+                            System.out.println("cccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
                             restTemplate.exchange("http://172.17.0.1:5000/locations", HttpMethod.POST, request, String.class);
                             System.out.println("6666666666666666666666666666666666666666666666666666666666");
                         }
