@@ -24,13 +24,8 @@ user_id BIGINT(20),
 title VARCHAR(50),
 body VARCHAR(500),
 location VARCHAR(50),
-date DATE,
+date DATE
 )  ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-INSERT INTO posts (id, user_id, title, body) VALUES (1, 1, "first title", "first post");
-INSERT INTO posts (id, user_id, title, body) VALUES (2, 2, "second title", "second post");
-INSERT INTO posts (id, user_id, title, body) VALUES (3, 3, "third title", "third post");
-INSERT INTO posts (id, user_id, title, body) VALUES (4, 3, "fourth title", "fourth post");
 
 CREATE TABLE comments (
 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
