@@ -133,15 +133,18 @@ public class PostController {
                             PostWeatherDTO postWeatherDTO = new PostWeatherDTO(post.getLocation(), post.getDate(), (float) rand.nextInt(30) - 20);
                             HttpEntity<PostWeatherDTO> request = new HttpEntity<>(postWeatherDTO);
                             restTemplate.exchange("http://172.17.0.1:5000/locations", HttpMethod.POST, request, String.class);
+                            System.out.println("6666666666666666666666666666666666666666666666666666666666");
                         }
                     }
                 }
             }
 
             userRepository.findById(post.getUserId()).orElseThrow(() -> new Exception409());
+            System.out.println("7777777777777777777777777777777777777777777777777777777777");
 
             response.setStatus(201);
             Post postNew = postRepository.save(post);
+            System.out.println("888888888888888888888888888888888888888888888888888");
             response.addHeader("Location", "api/posts/" + postNew.getId());
             return postNew;
         } catch (Exception400 ex) {
