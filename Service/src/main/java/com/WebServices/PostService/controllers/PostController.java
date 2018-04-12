@@ -158,6 +158,8 @@ public class PostController {
             throw new Exception409("(POST) api/users", "no such user with id: " + post.getUserId());
         } catch (JsonProcessingException ex) {
             throw new Exception400("(POST) api/users", "JSON formatting failed with id " + post.getId());
+        } catch (Exception ex){
+            throw new Exception503("(POST) api/users", "the weather forecast service is unavailable");
         }
     }
 
