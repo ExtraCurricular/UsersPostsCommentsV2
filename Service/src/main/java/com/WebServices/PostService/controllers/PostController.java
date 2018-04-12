@@ -40,10 +40,16 @@ public class PostController {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
-                restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
-                        HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
-                        });
+        ResponseEntity<List<WeatherForecastDTO>> forecastResponse;
+
+        try {
+            forecastResponse = restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
+                    HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
+                    });
+        } catch (Exception ex){
+            //throw new Exception503("(GET) api/posts", "the weather forecast service is unavailable");
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        }
 
         if (forecastResponse.getStatusCode() == HttpStatus.OK) {
             List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
@@ -71,23 +77,25 @@ public class PostController {
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new Exception404("(GET) api/posts/id", "- no post found"));
 
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        if (post.getLocation() != null) {
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
-                restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
-                        HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
-                        });
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
+                    restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
+                            HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
+                            });
 
-        if (forecastResponse.getStatusCode() == HttpStatus.OK) {
-            List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
-            if (post.getLocation() != null) {
-                WeatherForecastDTO forecast = forecasts.stream().filter(
-                        x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate())))
-                        .findFirst()
-                        .orElse(null);
-                if (forecast != null) {
-                    return new ResponseEntity<>(new PostDTO(post, forecast.getTemperature()), HttpStatus.OK);
+            if (forecastResponse.getStatusCode() == HttpStatus.OK) {
+                List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
+                if (post.getLocation() != null) {
+                    WeatherForecastDTO forecast = forecasts.stream().filter(
+                            x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate())))
+                            .findFirst()
+                            .orElse(null);
+                    if (forecast != null) {
+                        return new ResponseEntity<>(new PostDTO(post, forecast.getTemperature()), HttpStatus.OK);
+                    }
                 }
             }
         }
@@ -136,7 +144,7 @@ public class PostController {
                             HttpEntity<String> request = new HttpEntity<>(json);
                             ResponseEntity<String> postResponse = restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
                                     HttpMethod.POST, request, String.class);
-                            if (postResponse.getStatusCode() != HttpStatus.CREATED){
+                            if (postResponse.getStatusCode() != HttpStatus.CREATED) {
                                 throw new Exception503("(POST) api/posts", "the weather forecast service responded with an error code");
                             }
                         }
@@ -158,7 +166,7 @@ public class PostController {
             throw new Exception409("(POST) api/users", "no such user with id: " + post.getUserId());
         } catch (JsonProcessingException ex) {
             throw new Exception400("(POST) api/users", "JSON formatting failed with id " + post.getId());
-        } catch (Exception ex){
+        } catch (Exception ex) {
             throw new Exception503("(POST) api/users", "the weather forecast service is unavailable");
         }
     }
