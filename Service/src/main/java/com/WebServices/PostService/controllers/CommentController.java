@@ -33,8 +33,8 @@ public class CommentController {
     PostRepository postRepository;
 
     @GetMapping("/comments")
-    public String getAllComments() {
-        final String uri = "HTTPS://193.219.91.103:2740/locations";
+    public @ResponseBody String getAllComments() {
+        final String uri = "http://localhost:5000/locations";
 
         return new RestTemplate().getForObject(uri, String.class);
     }
