@@ -6,7 +6,7 @@ public class PostDTO implements IPost{
     private String body;
     private long userId;
     private String location;
-    private float temperature;
+    private Float temperature;
 
     public long getId() {
         return id;
@@ -72,5 +72,7 @@ public class PostDTO implements IPost{
         body = post.getBody();
         userId = post.getUserId();
         location = post.getLocation();
+
+        this.temperature = null;
     }
 }
