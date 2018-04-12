@@ -65,4 +65,12 @@ public class PostDTO implements IPost{
 
         this.temperature = temperature;
     }
+
+    public PostDTO(Post post){
+        id = post.getId();
+        title = post.getTitle();
+        body = post.getBody();
+        userId = post.getUserId();
+        location = post.getLocation();
+    }
 }

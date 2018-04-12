@@ -52,6 +52,7 @@ public class PostController {
                         responsePosts.add(new PostDTO(post, forecast.getTemperature()));
                     }
                 }
+                responsePosts.add(new PostDTO(post));
             }
             return new ResponseEntity<>(responsePosts, HttpStatus.OK);
         } else {

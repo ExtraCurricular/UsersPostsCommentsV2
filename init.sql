@@ -28,7 +28,7 @@ date DATE
 )  ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO posts (id, user_id, title, body, location, date) VALUES (1, 1, "first title", "first post", null, '2018-04-12');
-INSERT INTO posts (id, user_id, title, body, location, date) VALUES (2, 2, "second title", "second post", 'Vilnius', '2018-02-12');
+INSERT INTO posts (id, user_id, title, body, location, date) VALUES (2, 2, "second title", "second post", 'Vilnius', '2018-02-02');
 INSERT INTO posts (id, user_id, title, body, location, date) VALUES (3, 3, "third title", "third post", null, '2018-04-14');
 INSERT INTO posts (id, user_id, title, body, location, date) VALUES (4, 3, "fourth title", "fourth post", 'Vilnius', '2018-12-30');
 
