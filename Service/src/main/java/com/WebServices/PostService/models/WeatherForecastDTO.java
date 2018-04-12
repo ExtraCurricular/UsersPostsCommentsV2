@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class WeatherForecastDTO {
     private int id;
-    private float temperature;
+    private Float temperature;
     private String city;
     private Date date;
 
@@ -16,11 +16,11 @@ public class WeatherForecastDTO {
         this.id = id;
     }
 
-    public float getTemperature() {
+    public Float getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(float temperature) {
+    public void setTemperature(Float temperature) {
         this.temperature = temperature;
     }
 
