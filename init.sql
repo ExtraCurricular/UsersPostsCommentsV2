@@ -22,7 +22,9 @@ CREATE TABLE posts (
 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 user_id BIGINT(20),
 title VARCHAR(50),
-body VARCHAR(500)
+body VARCHAR(500),
+location VARCHAR(50),
+date DATE,
 )  ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO posts (id, user_id, title, body) VALUES (1, 1, "first title", "first post");
