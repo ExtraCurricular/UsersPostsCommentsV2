@@ -48,11 +48,14 @@ public class PostController {
             for(Post post : posts){
                 if (post.getLocation() != null){
                     WeatherForecastDTO forecast = forecasts.stream().filter(x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate()))).findFirst().orElse(null);
+                    System.out.println(post.getDate());
                     if(forecast != null){
                         responsePosts.add(new PostDTO(post, forecast.getTemperature()));
                     }
+                } else {
+                    responsePosts.add(new PostDTO(post));
                 }
-                responsePosts.add(new PostDTO(post));
+
             }
             return new ResponseEntity<>(responsePosts, HttpStatus.OK);
         } else {
