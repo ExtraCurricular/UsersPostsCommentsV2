@@ -7,6 +7,7 @@ import com.WebServices.PostService.models.*;
 import com.WebServices.PostService.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,13 @@ import com.WebServices.PostService.Exception404;
 import com.WebServices.PostService.repositories.PostRepository;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Random;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -95,12 +99,41 @@ public class PostController {
     @PostMapping("/posts")
     public Post createPost(@Valid @RequestBody Post post, HttpServletResponse response) {
         try {
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+
             if (postRepository.existsById(post.getId())) {
                 throw new Exception400();
             }
 
             if (post.getTitle() == null || post.getBody() == null || post.getUserId() == 0) {
                 throw new Exception406();
+            }
+
+            post.setDate(new Date());
+
+            if (post.getLocation() != null) {
+                RestTemplate restTemplate = new RestTemplate();
+                ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
+                        restTemplate.exchange("http://172.17.0.1:5000/locations",
+                                HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
+                                });
+
+                if (forecastResponse.getStatusCode() == HttpStatus.OK) {
+                    List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
+                    if (post.getLocation() != null) {
+                        WeatherForecastDTO forecast = forecasts.stream().filter(
+                                x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate())))
+                                .findFirst()
+                                .orElse(null);
+                        if (forecast == null) {
+                            Random rand = new Random();
+                            WeatherForecastDTO forecastDTO = new WeatherForecastDTO(post.getLocation(), post.getDate(), (float) rand.nextInt(30) - 20);
+                            HttpEntity<WeatherForecastDTO> request = new HttpEntity<>(forecastDTO);
+                            ResponseEntity<String> responsePost = restTemplate
+                                    .exchange("http://172.17.0.1:5000/locations", HttpMethod.POST, request, String.class);
+                        }
+                    }
+                }
             }
 
             userRepository.findById(post.getUserId()).orElseThrow(() -> new Exception409());

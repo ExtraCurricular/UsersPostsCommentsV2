@@ -8,6 +8,12 @@ public class WeatherForecastDTO {
     private String city;
     private Date date;
 
+    public WeatherForecastDTO(String city, Date date, Float temperature){
+        this.city = city;
+        this.date = date;
+        this.temperature = temperature;
+    }
+
     public int getId() {
         return id;
     }
