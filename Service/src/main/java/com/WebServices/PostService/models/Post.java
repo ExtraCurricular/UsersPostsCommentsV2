@@ -22,6 +22,7 @@ public class Post implements IPost{
     private String body;
     private long userId;
     private String location;
+    private Date date;
 
     public String getLocation() {
         return location;
@@ -38,8 +39,6 @@ public class Post implements IPost{
     public void setDate(Date date) {
         this.date = date;
     }
-
-    private Date date;
 
     public long getId() {
         return id;

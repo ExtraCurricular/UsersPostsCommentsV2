@@ -57,7 +57,6 @@ public class PostController {
                 } else {
                     responsePosts.add(new PostDTO(post));
                 }
-
             }
             return new ResponseEntity<>(responsePosts, HttpStatus.OK);
         } else {

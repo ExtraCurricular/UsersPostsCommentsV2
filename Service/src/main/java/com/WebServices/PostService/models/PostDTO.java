@@ -1,5 +1,7 @@
 package com.WebServices.PostService.models;
 
+import java.util.Date;
+
 public class PostDTO implements IPost{
     private long id;
     private String title;
@@ -7,6 +9,15 @@ public class PostDTO implements IPost{
     private long userId;
     private String location;
     private Float temperature;
+    private Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public long getId() {
         return id;
