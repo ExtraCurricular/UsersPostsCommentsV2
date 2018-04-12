@@ -141,7 +141,7 @@ public class PostController {
                             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                             String json = ow.writeValueAsString(postWeatherDTO);
                             HttpEntity<String> request = new HttpEntity<>(json);
-                            restTemplate.postForEntity("http://193.219.91.103:2740/locations", request, String.class);
+                            restTemplate.postForEntity("http://172.17.0.1:5000/locations", request, String.class);
                         }
                     }
                 }
