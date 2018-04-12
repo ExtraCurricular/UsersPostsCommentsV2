@@ -48,11 +48,11 @@ public class PostDTO implements IPost{
         this.location = location;
     }
 
-    public float getTemperature() {
+    public Float getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(float temperature) {
+    public void setTemperature(Float temperature) {
         this.temperature = temperature;
     }
 
