@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "posts")
-public class Post {
+public class Post implements IPost{
 
     @Id
     @GeneratedValue(generator = "increment")

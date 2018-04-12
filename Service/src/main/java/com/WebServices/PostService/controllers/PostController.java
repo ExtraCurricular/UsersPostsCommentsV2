@@ -3,17 +3,22 @@ package com.WebServices.PostService.controllers;
 import com.WebServices.PostService.Exception400;
 import com.WebServices.PostService.Exception406;
 import com.WebServices.PostService.Exception409;
-import com.WebServices.PostService.models.User;
+import com.WebServices.PostService.models.*;
 import com.WebServices.PostService.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.WebServices.PostService.Exception404;
-import com.WebServices.PostService.models.Post;
 import com.WebServices.PostService.repositories.PostRepository;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,8 +32,31 @@ public class PostController {
     UserRepository userRepository;
 
     @GetMapping("/posts")
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public ResponseEntity<?> getAllPosts() {
+        List<Post> posts = postRepository.findAll();
+        List<PostDTO> responsePosts = new ArrayList<>();
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
+                restTemplate.exchange("http://172.17.0.1:5000/locations",
+                        HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
+                        });
+
+        if(forecastResponse.getStatusCode() == HttpStatus.OK){
+            List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
+            for(Post post : posts){
+                if (post.getLocation() != null){
+                    WeatherForecastDTO forecast = forecasts.stream().filter(x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate()))).findFirst().orElse(null);
+                    if(forecast != null){
+                        responsePosts.add(new PostDTO(post, forecast.getTemperature()));
+                    }
+                }
+            }
+            return new ResponseEntity<>(responsePosts, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/posts/{id}")
