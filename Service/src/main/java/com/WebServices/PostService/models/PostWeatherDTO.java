@@ -6,9 +6,9 @@ public class PostWeatherDTO {
 
     private Float temperature;
     private String city;
-    private Date date;
+    private String date;
 
-    public PostWeatherDTO(String city, Date date, Float temperature) {
+    public PostWeatherDTO(String city, String date, Float temperature) {
         this.city = city;
         this.date = date;
         this.temperature = temperature;
@@ -30,11 +30,11 @@ public class PostWeatherDTO {
         this.city = city;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

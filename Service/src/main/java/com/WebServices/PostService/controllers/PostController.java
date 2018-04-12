@@ -5,12 +5,13 @@ import com.WebServices.PostService.Exception406;
 import com.WebServices.PostService.Exception409;
 import com.WebServices.PostService.models.*;
 import com.WebServices.PostService.repositories.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import com.WebServices.PostService.Exception404;
 import com.WebServices.PostService.repositories.PostRepository;
@@ -128,15 +129,19 @@ public class PostController {
                                 .orElse(null);
                         System.out.println("44444444444444444444444444444444444444444444444444444444444444");
                         if (forecast == null) {
-                            System.out.println("55555555555555555555555555555555555555555555555555555555555");
                             Random rand = new Random();
-                            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                            PostWeatherDTO postWeatherDTO = new PostWeatherDTO(post.getLocation(), post.getDate(), (float) rand.nextInt(30) - 20);
-                            System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
-                            HttpEntity<PostWeatherDTO> request = new HttpEntity<>(postWeatherDTO);
-                            System.out.println("cccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
-                            restTemplate.exchange("http://172.17.0.1:5000/locations", HttpMethod.POST, request, String.class);
-                            System.out.println("6666666666666666666666666666666666666666666666666666666666");
+                            HttpHeaders headers = new HttpHeaders();
+                            headers.setContentType(MediaType.APPLICATION_JSON);
+                            PostWeatherDTO postWeatherDTO = new PostWeatherDTO(
+                                    post.getLocation(),
+                                    fmt.format(new Date()),
+                                    (float) rand.nextInt(30) - 20
+                            );
+
+                            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+                            String json = ow.writeValueAsString(postWeatherDTO);
+                            HttpEntity<String> request = new HttpEntity<>(json);
+                            restTemplate.postForEntity("http://193.219.91.103:2740/locations", request, String.class);
                         }
                     }
                 }
@@ -156,6 +161,8 @@ public class PostController {
             throw new Exception406("(POST) api/users", "missing fields");
         } catch (Exception409 ex) {
             throw new Exception409("(POST) api/users", "no such user with id: " + post.getUserId());
+        } catch (JsonProcessingException ex) {
+            throw new Exception400("(POST) api/users", "JSON formatting failed with id " + post.getId());
         }
     }
 
