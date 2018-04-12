@@ -108,16 +108,17 @@ public class PostController {
             if (post.getTitle() == null || post.getBody() == null || post.getUserId() == 0) {
                 throw new Exception406();
             }
-
+            System.out.println("111111111111111111111111111111111111111111111111111111111111111111111");
             post.setDate(new Date());
 
             if (post.getLocation() != null) {
+                System.out.println("2222222222222222222222222222222222222222222222222222222222222222222");
                 RestTemplate restTemplate = new RestTemplate();
                 ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
                         restTemplate.exchange("http://172.17.0.1:5000/locations",
                                 HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
                                 });
-
+                System.out.println("33333333333333333333333333333333333333333333333333333333333333333333");
                 if (forecastResponse.getStatusCode() == HttpStatus.OK) {
                     List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
                     if (post.getLocation() != null) {
@@ -125,7 +126,9 @@ public class PostController {
                                 x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate())))
                                 .findFirst()
                                 .orElse(null);
+                        System.out.println("44444444444444444444444444444444444444444444444444444444444444");
                         if (forecast == null) {
+                            System.out.println("55555555555555555555555555555555555555555555555555555555555");
                             Random rand = new Random();
                             PostWeatherDTO postWeatherDTO = new PostWeatherDTO(post.getLocation(), post.getDate(), (float) rand.nextInt(30) - 20);
                             HttpEntity<PostWeatherDTO> request = new HttpEntity<>(postWeatherDTO);
