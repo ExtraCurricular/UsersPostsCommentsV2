@@ -43,13 +43,15 @@ public class PostController {
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
                         });
 
-        if(forecastResponse.getStatusCode() == HttpStatus.OK){
+        if (forecastResponse.getStatusCode() == HttpStatus.OK) {
             List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
-            for(Post post : posts){
-                if (post.getLocation() != null){
-                    WeatherForecastDTO forecast = forecasts.stream().filter(x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate()))).findFirst().orElse(null);
-                    System.out.println(post.getDate());
-                    if(forecast != null){
+            for (Post post : posts) {
+                if (post.getLocation() != null) {
+                    WeatherForecastDTO forecast = forecasts.stream().filter(
+                            x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate())))
+                            .findFirst()
+                            .orElse(null);
+                    if (forecast != null) {
                         responsePosts.add(new PostDTO(post, forecast.getTemperature()));
                     }
                 } else {
@@ -64,8 +66,31 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public Post getPostById(@PathVariable(value = "id") Long postId) {
-        return postRepository.findById(postId).orElseThrow(() -> new Exception404("(GET) api/posts/id", "- no post found"));
+    public ResponseEntity<?> getPostById(@PathVariable(value = "id") Long postId) {
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new Exception404("(GET) api/posts/id", "- no post found"));
+
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<WeatherForecastDTO>> forecastResponse =
+                restTemplate.exchange("http://172.17.0.1:5000/locations",
+                        HttpMethod.GET, null, new ParameterizedTypeReference<List<WeatherForecastDTO>>() {
+                        });
+
+        if (forecastResponse.getStatusCode() == HttpStatus.OK) {
+            List<WeatherForecastDTO> forecasts = forecastResponse.getBody();
+            if (post.getLocation() != null) {
+                WeatherForecastDTO forecast = forecasts.stream().filter(
+                        x -> x.getCity().equals(post.getLocation()) && fmt.format(x.getDate()).equals(fmt.format(post.getDate())))
+                        .findFirst()
+                        .orElse(null);
+                if (forecast != null) {
+                    return new ResponseEntity<>(new PostDTO(post, forecast.getTemperature()), HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     @PostMapping("/posts")
