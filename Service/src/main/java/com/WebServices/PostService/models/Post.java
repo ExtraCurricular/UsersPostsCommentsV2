@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Table(name = "posts")
@@ -20,6 +21,25 @@ public class Post {
     private String title;
     private String body;
     private long userId;
+    private String location;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    private Date date;
 
     public long getId() {
         return id;
