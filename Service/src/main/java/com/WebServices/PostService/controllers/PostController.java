@@ -103,37 +103,28 @@ public class PostController {
 
             Post postNew = new Post();
 
-            System.out.println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111");
 
             if (post.getLocation() != null) {
                 if (post.getLocation().getCity() == null || post.getLocation().getDate() == null) {
                     throw new Exception400("invalid location request!");
                 }
-                System.out.println("22222222222222222222222222222222222222222222222222222222222222222222");
                 RestTemplate restTemplate = new RestTemplate();
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                 String json = ow.writeValueAsString(post.getLocation());
                 HttpEntity<String> request = new HttpEntity<>(json);
                 ResponseEntity<String> postResponse = restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
                         HttpMethod.POST, request, String.class);
-                System.out.println("3333333333333333333333333333333333333333333333333333333333333333333333333333331");
-                System.out.println(postResponse.getStatusCode() + " " + postResponse.getBody());
                 if (postResponse.getStatusCode() == HttpStatus.CREATED) {
                     System.out.println(postResponse.getBody());
                     HttpHeaders headers = postResponse.getHeaders();
                     String location = headers.getLocation().toString();
-                    System.out.println(location + "????????????????????????????????????????????????????????????????????????");
                     int index = location.lastIndexOf('/');
                     int id = Integer.parseInt(location.substring(index + 1, location.length()));
-                    System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
-                    System.out.println(id);
                     postNew.setWeatherId(id);
                 } else {
                     throw new Exception503("(POST) api/posts", "the weather forecast service responded with an error code");
                 }
             }
-
-            System.out.println("444444444444444444444444444444444444444444444444444444444444444444444444444444444444444");
 
             userRepository.findById(post.getUserId()).orElseThrow(() -> new Exception409());
 
