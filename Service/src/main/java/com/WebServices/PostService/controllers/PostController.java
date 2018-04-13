@@ -119,6 +119,7 @@ public class PostController {
                 ResponseEntity<String> postResponse = restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
                         HttpMethod.POST, request, String.class);
                 if (postResponse.getStatusCode() == HttpStatus.CREATED) {
+                    System.out.println(postResponse.getBody());
                     HttpHeaders headers = postResponse.getHeaders();
                     String location = headers.LOCATION;
                     int index = location.lastIndexOf('/');
