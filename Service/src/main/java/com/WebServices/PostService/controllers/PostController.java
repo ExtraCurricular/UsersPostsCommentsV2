@@ -47,7 +47,7 @@ public class PostController {
                     postNew.setBody(post.getBody());
                     postNew.setTitle(post.getTitle());
                     postNew.setId(post.getId());
-                    postNew.setWeatherRequest(forecastResponse.getBody());
+                    postNew.setLocation(forecastResponse.getBody());
                     responsePosts.add(postNew);
                 } else {
                     throw new Exception503("(GET) api/posts/id", "the weather service did not respond");
