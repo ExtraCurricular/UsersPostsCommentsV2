@@ -23,7 +23,7 @@ id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 user_id BIGINT(20),
 title VARCHAR(50),
 body VARCHAR(500),
-weatherId BIGINT(20)
+weather_id BIGINT(20)
 )  ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO posts (id, user_id, title, body, weatherId ) VALUES (1, 1, "first title", "first post", 1);
