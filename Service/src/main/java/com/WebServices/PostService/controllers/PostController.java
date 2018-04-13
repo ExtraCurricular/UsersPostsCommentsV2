@@ -123,7 +123,9 @@ public class PostController {
                     HttpHeaders headers = postResponse.getHeaders();
                     String location = headers.LOCATION;
                     int index = location.lastIndexOf('/');
-                    int id = Integer.parseInt(location.substring(index, location.length()));
+                    int  id = Integer.parseInt(location.substring(index + 1, location.length()));
+                    System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
+                    System.out.println(id);
                     postNew.setWeatherId(id);
                 } else {
                     throw new Exception503("(POST) api/posts", "the weather forecast service responded with an error code");
