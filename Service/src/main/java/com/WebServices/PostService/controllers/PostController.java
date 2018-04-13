@@ -108,22 +108,26 @@ public class PostController {
 
             Post postNew = new Post();
 
+            System.out.println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111");
+
             if (post.getWeatherRequest() != null) {
                 if (post.getWeatherRequest().getCity() == null || post.getWeatherRequest().getDate() == null) {
                     throw new Exception400("invalid location request!");
                 }
+                System.out.println("22222222222222222222222222222222222222222222222222222222222222222222");
                 RestTemplate restTemplate = new RestTemplate();
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                 String json = ow.writeValueAsString(post.getWeatherRequest());
                 HttpEntity<String> request = new HttpEntity<>(json);
                 ResponseEntity<String> postResponse = restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
                         HttpMethod.POST, request, String.class);
+                System.out.println("3333333333333333333333333333333333333333333333333333333333333333333333333333331");
                 if (postResponse.getStatusCode() == HttpStatus.CREATED) {
                     System.out.println(postResponse.getBody());
                     HttpHeaders headers = postResponse.getHeaders();
                     String location = headers.LOCATION;
                     int index = location.lastIndexOf('/');
-                    int  id = Integer.parseInt(location.substring(index + 1, location.length()));
+                    int id = Integer.parseInt(location.substring(index + 1, location.length()));
                     System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
                     System.out.println(id);
                     postNew.setWeatherId(id);
@@ -132,11 +136,15 @@ public class PostController {
                 }
             }
 
+            System.out.println("444444444444444444444444444444444444444444444444444444444444444444444444444444444444444");
+
             userRepository.findById(post.getUserId()).orElseThrow(() -> new Exception409());
 
             postNew.setBody(post.getBody());
             postNew.setTitle(post.getTitle());
             postNew.setUserId(post.getUserId());
+
+            System.out.println("55555555555555555555555555555555555555555555555555555555555555555555555555555555555555");
 
             response.setStatus(201);
             Post postNewest = postRepository.save(postNew);
@@ -214,6 +222,17 @@ public class PostController {
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<?> deletePost(@PathVariable(value = "id") Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new Exception404("(DELETE) api/posts/id", ""));
+
+        if (post.getWeatherId() != 0) {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> deleteResponse =
+                    restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations/" + post.getWeatherId(),
+                            HttpMethod.DELETE, null, new ParameterizedTypeReference<String>() {
+                            });
+            if(deleteResponse.getStatusCode() != HttpStatus.OK){
+                throw new Exception503("(DELETE) api/posts", "the weather forecast service responded with an error code");
+            }
+        }
 
         postRepository.delete(post);
 
