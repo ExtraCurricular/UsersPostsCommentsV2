@@ -176,7 +176,7 @@ public class PostController {
     }
 
     @PatchMapping("/posts/{id}")
-    public Post patchPost(@PathVariable(value = "id") Long postId, @Valid @RequestBody Post newPost, HttpServletResponse response) {
+    public Post patchPost(@PathVariable(value = "id") Long postId, @Valid @RequestBody PostDTO newPost, HttpServletResponse response) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new Exception404("(PATCH) api/posts/id", "- no such post"));
         try {
             userRepository.findById(post.getUserId()).orElseThrow(() -> new Exception409());
