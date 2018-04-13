@@ -7,14 +7,14 @@ public class PostDTO {
     private String title;
     private String body;
     private long userId;
-    private WeatherRequest location;
+    private Location location;
 
-    public WeatherRequest getWeatherRequest() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setWeatherRequest(WeatherRequest weatherRequest) {
-        this.location = weatherRequest;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public long getId() {

@@ -4,7 +4,6 @@ import com.WebServices.PostService.*;
 import com.WebServices.PostService.models.*;
 import com.WebServices.PostService.repositories.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import com.WebServices.PostService.repositories.PostRepository;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Random;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -42,9 +37,9 @@ public class PostController {
 
         for (Post post : posts) {
             if (post.getWeatherId() != 0) {
-                ResponseEntity<WeatherRequest> forecastResponse =
+                ResponseEntity<Location> forecastResponse =
                         restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations/" + post.getWeatherId(),
-                                HttpMethod.GET, null, new ParameterizedTypeReference<WeatherRequest>() {
+                                HttpMethod.GET, null, new ParameterizedTypeReference<Location>() {
                                 });
                 if (forecastResponse.getStatusCode() == HttpStatus.OK) {
                     PostDTO postNew = new PostDTO();
@@ -76,9 +71,9 @@ public class PostController {
 
         if (post.getWeatherId() != 0) {
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<WeatherRequest> forecastResponse =
+            ResponseEntity<Location> forecastResponse =
                     restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations/" + post.getWeatherId(),
-                            HttpMethod.GET, null, new ParameterizedTypeReference<WeatherRequest>() {
+                            HttpMethod.GET, null, new ParameterizedTypeReference<Location>() {
                             });
             if (forecastResponse.getStatusCode() == HttpStatus.OK) {
                 PostDTO postNew = new PostDTO();
@@ -86,7 +81,7 @@ public class PostController {
                 postNew.setBody(post.getBody());
                 postNew.setTitle(post.getTitle());
                 postNew.setId(post.getId());
-                postNew.setWeatherRequest(forecastResponse.getBody());
+                postNew.setLocation(forecastResponse.getBody());
                 return new ResponseEntity<>(postNew, HttpStatus.OK);
             } else {
                 throw new Exception503("(GET) api/posts/id", "the weather service did not respond");
@@ -110,14 +105,14 @@ public class PostController {
 
             System.out.println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111");
 
-            if (post.getWeatherRequest() != null) {
-                if (post.getWeatherRequest().getCity() == null || post.getWeatherRequest().getDate() == null) {
+            if (post.getLocation() != null) {
+                if (post.getLocation().getCity() == null || post.getLocation().getDate() == null) {
                     throw new Exception400("invalid location request!");
                 }
                 System.out.println("22222222222222222222222222222222222222222222222222222222222222222222");
                 RestTemplate restTemplate = new RestTemplate();
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-                String json = ow.writeValueAsString(post.getWeatherRequest());
+                String json = ow.writeValueAsString(post.getLocation());
                 HttpEntity<String> request = new HttpEntity<>(json);
                 ResponseEntity<String> postResponse = restTemplate.exchange("http://userspostscommentsv2_WeatherService_1:5000/locations",
                         HttpMethod.POST, request, String.class);

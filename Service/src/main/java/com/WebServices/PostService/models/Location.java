@@ -1,6 +1,6 @@
 package com.WebServices.PostService.models;
 
-public class WeatherRequest {
+public class Location {
     private String city;
     private String date;
     private float temperature;
