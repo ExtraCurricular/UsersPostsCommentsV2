@@ -23,14 +23,13 @@ id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 user_id BIGINT(20),
 title VARCHAR(50),
 body VARCHAR(500),
-location VARCHAR(50),
-date DATE
+weatherId BIGINT(20)
 )  ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO posts (id, user_id, title, body, location, date) VALUES (1, 1, "first title", "first post", null, '2018-04-12');
-INSERT INTO posts (id, user_id, title, body, location, date) VALUES (2, 2, "second title", "second post", 'Vilnius', '2018-02-02');
-INSERT INTO posts (id, user_id, title, body, location, date) VALUES (3, 3, "third title", "third post", null, '2018-04-14');
-INSERT INTO posts (id, user_id, title, body, location, date) VALUES (4, 3, "fourth title", "fourth post", 'Vilnius', '2018-12-30');
+INSERT INTO posts (id, user_id, title, body, weatherId ) VALUES (1, 1, "first title", "first post", 1);
+INSERT INTO posts (id, user_id, title, body, weatherId ) VALUES (2, 2, "second title", "second post", 2);
+INSERT INTO posts (id, user_id, title, body, weatherId ) VALUES (3, 3, "third title", "third post", 2);
+INSERT INTO posts (id, user_id, title, body, weatherId ) VALUES (4, 3, "fourth title", "fourth post", 1);
 
 CREATE TABLE comments (
 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

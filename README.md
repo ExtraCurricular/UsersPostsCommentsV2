@@ -12,7 +12,7 @@ api/users/id (PUT) - in url - id - in body - email(string), username(string) </b
 api/users/id (PATCH) - in url - id - in body - email(string), username(string) </br>
 
 Posts endpoint: </br>
-api/posts (POST) - in body - userId(int), title(string), body(string), (OPTIONAL) location(string) (the service calls another service, that gets the temperature according to the specified location)</br>
+api/posts (POST) - in body - userId(int), title(string), body(string), (OPTIONAL) object {city(string), date(Date), temeperature(float)}</br>
 api/posts (GET) - no params </br>
 api/posts/id (GET) - in url - id </br>
 api/posts/id (DELETE) - in url - id </br>

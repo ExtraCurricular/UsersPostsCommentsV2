@@ -7,16 +7,14 @@ public class PostDTO {
     private String title;
     private String body;
     private long userId;
-    private String location;
-    private Float temperature;
-    private Date date;
+    private WeatherRequest location;
 
-    public Date getDate() {
-        return date;
+    public WeatherRequest getWeatherRequest() {
+        return location;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setWeatherRequest(WeatherRequest weatherRequest) {
+        this.location = weatherRequest;
     }
 
     public long getId() {
@@ -51,39 +49,4 @@ public class PostDTO {
         this.userId = userId;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Float getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Float temperature) {
-        this.temperature = temperature;
-    }
-
-    public PostDTO(Post post, float temperature){
-        id = post.getId();
-        title = post.getTitle();
-        body = post.getBody();
-        userId = post.getUserId();
-        location = post.getLocation();
-        date = post.getDate();
-
-        this.temperature = temperature;
-    }
-
-    public PostDTO(Post post){
-        id = post.getId();
-        title = post.getTitle();
-        body = post.getBody();
-        userId = post.getUserId();
-        location = post.getLocation();
-        date = post.getDate();
-    }
 }

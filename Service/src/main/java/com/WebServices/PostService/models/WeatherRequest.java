@@ -1,20 +1,9 @@
 package com.WebServices.PostService.models;
 
-import java.util.Date;
-
-public class PostWeatherDTO {
-
-    private Float temperature;
+public class WeatherRequest {
     private String city;
     private String date;
-
-    public Float getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Float temperature) {
-        this.temperature = temperature;
-    }
+    private float temperature;
 
     public String getCity() {
         return city;
@@ -30,5 +19,13 @@ public class PostWeatherDTO {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public float getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(float temperature) {
+        this.temperature = temperature;
     }
 }

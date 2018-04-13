@@ -20,23 +20,14 @@ public class Post {
     private String title;
     private String body;
     private long userId;
-    private String location;
-    private Date date;
+    private long weatherId;
 
-    public String getLocation() {
-        return location;
+    public long getWeatherId() {
+        return weatherId;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    public void setWeatherId(long weatherId) {
+        this.weatherId = weatherId;
     }
 
     public long getId() {
